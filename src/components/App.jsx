@@ -19,7 +19,12 @@ export class App extends Component {
     const { name, number } = values;
 
     if (this.isNameInContacts(name)) {
-      alert(`{name} is already in contacs.`);
+      alert(`${name} is already in contacs.`);
+      return;
+    }
+
+    if (this.isNumberInContacts(number)) {
+      alert('This number is already in contacs.');
       return;
     }
 
@@ -41,18 +46,28 @@ export class App extends Component {
   };
 
   isNameInContacts = name => {
-    return this.state.contacts.some(contact => contact.name === name);
+    return this.state.contacts.some(
+      contact => contact.name.toLowerCase() === name.toLowerCase()
+    );
+  };
+
+  isNumberInContacts = number => {
+    return this.state.contacts.some(contact => contact.number === number);
   };
 
   handleFilterChange = e => {
     this.setState({ filter: e.target.value.toLowerCase() });
   };
 
-  render() {
-    const { contacts, filter } = this.state;
-    const filteredContacts = contacts.filter(contact =>
-      contact.name.toLowerCase().includes(filter)
+  getFilteredContacts = () => {
+    return this.state.contacts.filter(contact =>
+      contact.name.toLowerCase().includes(this.state.filter)
     );
+  };
+
+  render() {
+    const { filter } = this.state;
+    const filteredContacts = this.getFilteredContacts();
 
     return (
       <div>
